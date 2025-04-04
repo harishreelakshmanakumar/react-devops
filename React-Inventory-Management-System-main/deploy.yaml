@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-studentportal-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mern-studentportal-backend
+  template:
+    metadata:
+      labels:
+        app: mern-studentportal-backend
+    spec:
+      containers:
+        - name: backend
+          image: docker.io/kiruthik1304/mern-studentportal-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: "mongodb+srv://mrbairavan:kiruthik13@cluster0.fhhvceb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+          imagePullPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-studentportal-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mern-studentportal-frontend
+  template:
+    metadata:
+      labels:
+        app: mern-studentportal-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: docker.io/kiruthik1304/mern-studentportal-frontend:latest
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: mern-studentportal-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: mern-studentportal-frontend
+  ports:
+    - port: 80
+      targetPort: 3000
+      nodePort: 30001
