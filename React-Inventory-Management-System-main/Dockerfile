@@ -2,14 +2,14 @@
 FROM node:14
 
 # Set working directory for backend
-WORKDIR /app/backend
+WORKDIR /app/Backend
 
 # Copy package files and install dependencies
-COPY ./backend/package.json ./backend/package-lock.json ./
+COPY ./Backend/package.json ./Backend/package-lock.json ./
 RUN npm install
 
 # Copy the backend source code
-COPY ./backend ./backend
+COPY ./Backend ./Backend
 
 # Expose the port the backend server runs on
 EXPOSE 5000
