@@ -6,8 +6,8 @@ pipeline {
         FRONTEND_IMAGE_NAME = "mern-studentportal-frontend"         
         IMAGE_TAG           = "latest"         
         DOCKER_REGISTRY     = "docker.io"         
-        DOCKER_REPO         = "kiruthik1304" 
-        KUBECONFIG = "/home/kiruthik/.kube/config"    
+        DOCKER_REPO         = "harishree11" 
+        KUBECONFIG = "/home/hari/.kube/config"    
     }      
 
     stages {         
