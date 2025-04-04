@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inventory-management-backend
+  name: inventory-management-Backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: inventory-management-backend
+      app: inventory-management-Backend
   template:
     metadata:
       labels:
-        app: inventory-management-backend
+        app: inventory-management-Backend
     spec:
       containers:
         - name: backend
-          image: docker.io/harishree11/inventory-management-backend:latest
+          image: docker.io/harishree11/inventory-management-Backend:latest
           ports:
             - containerPort: 5000
           env:
@@ -26,20 +26,20 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inventory-management-frontend
+  name: inventory-management-Frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: inventory-management-frontend
+      app: inventory-management-Frontend
   template:
     metadata:
       labels:
-        app: inventory-management-frontend
+        app: inventory-management-Frontend
     spec:
       containers:
-        - name: frontend
-          image: docker.io/harishree11/inventory-management-frontend:latest
+        - name: Frontend
+          image: docker.io/harishree11/inventory-management-Frontend:latest
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
@@ -48,10 +48,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: Backend-service
 spec:
   selector:
-    app: inventory-management-backend
+    app: inventory-management-Backend
   ports:
     - port: 5000
       targetPort: 5000
@@ -61,11 +61,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: Frontend-service
 spec:
   type: NodePort
   selector:
-    app: inventory-management-frontend
+    app: inventory-management-Frontend
   ports:
     - port: 80
       targetPort: 3000
