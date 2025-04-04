@@ -2,8 +2,8 @@ pipeline {
     agent any      
     
     environment {         
-        BACKEND_IMAGE_NAME  = "inventory-management-backend"         
-        FRONTEND_IMAGE_NAME = "inventory-management-frontend"         
+        BACKEND_IMAGE_NAME  = "inventory-management-Backend"         
+        FRONTEND_IMAGE_NAME = "inventory-management-Frontend"         
         IMAGE_TAG           = "latest"         
         DOCKER_REGISTRY     = "docker.io"         
         DOCKER_REPO         = "harishree11" 
@@ -22,7 +22,7 @@ pipeline {
         stage('Build Backend Image') {             
             steps {                 
                 script {                     
-                    dockerImageBackend = docker.build("${DOCKER_REPO}/${BACKEND_IMAGE_NAME}:${IMAGE_TAG}", "./React-Inventory-Management-System-main/backend")                 
+                    dockerImageBackend = docker.build("${DOCKER_REPO}/${BACKEND_IMAGE_NAME}:${IMAGE_TAG}", "./React-Inventory-Management-System-main/Backend")                 
                 }             
             }         
         }          
@@ -30,7 +30,7 @@ pipeline {
         stage('Build Frontend Image') {             
             steps {                 
                 script {                     
-                    dockerImageFrontend = docker.build("${DOCKER_REPO}/${FRONTEND_IMAGE_NAME}:${IMAGE_TAG}", "./React-Inventory-Management-System-main/frontend")                 
+                    dockerImageFrontend = docker.build("${DOCKER_REPO}/${FRONTEND_IMAGE_NAME}:${IMAGE_TAG}", "./React-Inventory-Management-System-main/Frontend")                 
                 }             
             }         
         }          
