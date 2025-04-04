@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {             
             steps {                 
                 script {                     
-                    git branch: 'main', url: 'https://github.com/kiruthik13/Devops_tasks.git'                 
+                    git branch: 'main', url: 'https://github.com/harishreelakshmanakumar/react-devops.git'                 
                 }             
             }         
         }          
@@ -38,7 +38,7 @@ pipeline {
         stage('Push Docker Images') {      
             steps {          
                 script {              
-                    sh 'docker login -u kiruthik1304 -p "kiruthik@13"'             
+                    sh 'docker login -u harishree11 -p "Hari@1104"'             
                     dockerImageBackend.push("${IMAGE_TAG}")              
                     dockerImageFrontend.push("${IMAGE_TAG}")          
                 }      
@@ -48,7 +48,7 @@ pipeline {
        stage('Deploy to Minikube') {
     steps {
         script {
-            sh 'kubectl apply -f deploy.yaml --kubeconfig=/home/kiruthik/.kube/config --validate=false'
+            sh 'kubectl apply -f deploy.yaml --kubeconfig=/home/hari/.kube/config --validate=false'
         }
     }
        }   
