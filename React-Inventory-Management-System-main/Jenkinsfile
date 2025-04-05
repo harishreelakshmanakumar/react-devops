@@ -1,15 +1,14 @@
 pipeline {     
     agent any      
     
- environment {         
-    BACKEND_IMAGE_NAME  = "inventory-management-backend"         
-    FRONTEND_IMAGE_NAME = "inventory-management-frontend"         
-    IMAGE_TAG           = "latest"         
-    DOCKER_REGISTRY     = "docker.io"         
-    DOCKER_REPO         = "harishree11" 
-    KUBECONFIG = "/home/hari/.kube/config"    
-}
-  
+    environment {         
+        BACKEND_IMAGE_NAME  = "inventory-management-backend"         
+        FRONTEND_IMAGE_NAME = "inventory-management-frontend"         
+        IMAGE_TAG           = "latest"         
+        DOCKER_REGISTRY     = "docker.io"         
+        DOCKER_REPO         = "harishree11" 
+        KUBECONFIG = "/home/hari/.kube/config"    
+    }
 
     stages {         
         stage('Checkout') {             
@@ -19,7 +18,7 @@ pipeline {
                 }             
             }         
         }          
-        
+
         stage('Build Backend Image') {             
             steps {                 
                 script {                     
@@ -46,14 +45,26 @@ pipeline {
             }  
         }            
 
-       stage('Deploy to Minikube') {
-    steps {
-        script {
-            sh 'kubectl apply -f deploy.yaml --kubeconfig=/home/hari/.kube/config --validate=false'
+        stage('Fix Kubeconfig Permissions') {
+            steps {
+                script {
+                    // Grant read access to kubeconfig for Jenkins user (e.g. running as root)
+                    sh '''
+                        sudo chown jenkins:jenkins /home/hari/.kube/config || true
+                        sudo chmod 644 /home/hari/.kube/config || true
+                    '''
+                }
+            }
         }
+
+        stage('Deploy to Minikube') {
+            steps {
+                script {
+                    sh 'kubectl apply -f deploy.yaml --kubeconfig=/home/hari/.kube/config --validate=false'
+                }
+            }
+        }   
     }
-       }   
-    }  // <-- Closing `stages {}` block here
 
     post {         
         always {             
