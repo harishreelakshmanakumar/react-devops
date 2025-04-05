@@ -45,30 +45,48 @@ pipeline {
             }
         }
 
-        stage('Fix Minikube Permissions') {
-            steps {
-                script {
-                    sh '''
-                        sudo mkdir -p /var/lib/jenkins/.minikube/profiles/minikube
+stage('Fix Minikube Permissions') {
+    steps {
+        script {
+            sh '''
+                set -e
 
-                        # Copy needed Minikube certs and configs
-                        sudo cp /home/hari/.minikube/ca.crt /var/lib/jenkins/.minikube/
-                        sudo cp /home/hari/.minikube/profiles/minikube/client.crt /var/lib/jenkins/.minikube/profiles/minikube/
-                        sudo cp /home/hari/.minikube/profiles/minikube/client.key /var/lib/jenkins/.minikube/profiles/minikube/
-                        sudo cp -r /home/hari/.minikube/profiles/minikube/* /var/lib/jenkins/.minikube/profiles/minikube/
+                echo "Preparing Minikube files for Jenkins..."
 
-                        # Set permissions
-                        sudo chown -R jenkins:jenkins /var/lib/jenkins/.minikube
+                sudo mkdir -p /var/lib/jenkins/.minikube/profiles/minikube
 
-                        # Setup kube config for Jenkins
-                        sudo mkdir -p /var/lib/jenkins/.kube
-                        sudo cp /home/hari/.kube/config /var/lib/jenkins/.kube/config
-                        sudo sed -i 's|/home/hari/.minikube|/var/lib/jenkins/.minikube|g' /var/lib/jenkins/.kube/config
-                        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
-                    '''
-                }
-            }
+                # Copy only known required files (if they exist)
+                if [ -f /home/hari/.minikube/ca.crt ]; then
+                    sudo cp /home/hari/.minikube/ca.crt /var/lib/jenkins/.minikube/
+                fi
+
+                if [ -f /home/hari/.minikube/profiles/minikube/client.crt ]; then
+                    sudo cp /home/hari/.minikube/profiles/minikube/client.crt /var/lib/jenkins/.minikube/profiles/minikube/
+                fi
+
+                if [ -f /home/hari/.minikube/profiles/minikube/client.key ]; then
+                    sudo cp /home/hari/.minikube/profiles/minikube/client.key /var/lib/jenkins/.minikube/profiles/minikube/
+                fi
+
+                if [ -f /home/hari/.minikube/profiles/minikube/config.json ]; then
+                    sudo cp /home/hari/.minikube/profiles/minikube/config.json /var/lib/jenkins/.minikube/profiles/minikube/
+                fi
+
+                # Fix ownership
+                sudo chown -R jenkins:jenkins /var/lib/jenkins/.minikube
+
+                # Setup .kube/config for Jenkins
+                sudo mkdir -p /var/lib/jenkins/.kube
+                sudo cp /home/hari/.kube/config /var/lib/jenkins/.kube/config
+                sudo sed -i 's|/home/hari/.minikube|/var/lib/jenkins/.minikube|g' /var/lib/jenkins/.kube/config
+                sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
+
+                echo "Minikube permission setup completed."
+            '''
         }
+    }
+}
+
 
         stage('Deploy to Minikube') {
             steps {
