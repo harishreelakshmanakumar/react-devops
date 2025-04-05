@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG           = "latest"
         DOCKER_REGISTRY     = "docker.io"
         DOCKER_REPO         = "harishree11"
-        KUBECONFIG = "/var/lib/jenkins/.kube/config"  // Jenkins-owned path
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
     }
 
     stages {
@@ -41,6 +41,25 @@ pipeline {
                     sh 'docker login -u harishree11 -p "Hari@1104"'
                     dockerImageBackend.push("${IMAGE_TAG}")
                     dockerImageFrontend.push("${IMAGE_TAG}")
+                }
+            }
+        }
+
+        stage('Fix Minikube Permissions') {
+            steps {
+                script {
+                    sh '''
+                        sudo mkdir -p /var/lib/jenkins/.minikube
+                        sudo cp -r /home/hari/.minikube/profiles /var/lib/jenkins/.minikube/
+                        sudo cp /home/hari/.minikube/*.crt /var/lib/jenkins/.minikube/
+                        sudo cp /home/hari/.minikube/*.key /var/lib/jenkins/.minikube/
+                        sudo chown -R jenkins:jenkins /var/lib/jenkins/.minikube
+
+                        sudo mkdir -p /var/lib/jenkins/.kube
+                        sudo cp /home/hari/.kube/config /var/lib/jenkins/.kube/config
+                        sudo sed -i 's|/home/hari/.minikube|/var/lib/jenkins/.minikube|g' /var/lib/jenkins/.kube/config
+                        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
+                    '''
                 }
             }
         }
