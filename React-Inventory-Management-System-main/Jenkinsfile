@@ -91,7 +91,7 @@ stage('Fix Minikube Permissions') {
         stage('Deploy to Minikube') {
             steps {
                 script {
-                    sh 'kubectl apply -f deploy.yaml --kubeconfig=/var/lib/jenkins/.kube/config --validate=false'
+                    sh 'kubectl apply -f React-Inventory-Management-System-main/deploy.yaml --kubeconfig=/var/lib/jenkins/.kube/config --validate=false'
                 }
             }
         }
