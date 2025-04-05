@@ -49,12 +49,18 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        sudo mkdir -p /var/lib/jenkins/.minikube
-                        sudo cp -r /home/hari/.minikube/profiles /var/lib/jenkins/.minikube/
-                        sudo cp /home/hari/.minikube/*.crt /var/lib/jenkins/.minikube/
-                        sudo cp /home/hari/.minikube/*.key /var/lib/jenkins/.minikube/
+                        sudo mkdir -p /var/lib/jenkins/.minikube/profiles/minikube
+
+                        # Copy needed Minikube certs and configs
+                        sudo cp /home/hari/.minikube/ca.crt /var/lib/jenkins/.minikube/
+                        sudo cp /home/hari/.minikube/profiles/minikube/client.crt /var/lib/jenkins/.minikube/profiles/minikube/
+                        sudo cp /home/hari/.minikube/profiles/minikube/client.key /var/lib/jenkins/.minikube/profiles/minikube/
+                        sudo cp -r /home/hari/.minikube/profiles/minikube/* /var/lib/jenkins/.minikube/profiles/minikube/
+
+                        # Set permissions
                         sudo chown -R jenkins:jenkins /var/lib/jenkins/.minikube
 
+                        # Setup kube config for Jenkins
                         sudo mkdir -p /var/lib/jenkins/.kube
                         sudo cp /home/hari/.kube/config /var/lib/jenkins/.kube/config
                         sudo sed -i 's|/home/hari/.minikube|/var/lib/jenkins/.minikube|g' /var/lib/jenkins/.kube/config
